@@ -13,18 +13,37 @@ const authRouter = require("./routes/Auth");
 const cartRouter = require("./routes/Cart");
 const ordersRouter = require("./routes/Order");
 const PORT = process.env.PORT || 8080;
-const allowedOrigins = [
-  process.env.FRONTEND_URL,
-  process.env.FRONTEND_URL_2,
+
+function splitOrigins(value) {
+  return String(value || "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
+const allowedOrigins = new Set([
+  ...splitOrigins(process.env.FRONTEND_URL),
+  ...splitOrigins(process.env.FRONTEND_URL_2),
+  ...splitOrigins(process.env.ALLOWED_ORIGINS),
   "http://localhost:3000",
-].filter(Boolean);
+]);
+
+function isVercelPreviewOrigin(origin) {
+  if (process.env.ALLOW_VERCEL_PREVIEW_ORIGINS !== "true") return false;
+  try {
+    const { protocol, hostname } = new URL(origin);
+    return protocol === "https:" && hostname.endsWith(".vercel.app");
+  } catch {
+    return false;
+  }
+}
 
 //middlewares
 
 server.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (!origin || allowedOrigins.has(origin) || isVercelPreviewOrigin(origin)) {
         return callback(null, true);
       }
 
