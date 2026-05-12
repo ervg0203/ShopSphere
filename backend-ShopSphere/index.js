@@ -21,15 +21,27 @@ function splitOrigins(value) {
     .filter(Boolean);
 }
 
-const allowedOrigins = new Set([
-  ...splitOrigins(process.env.FRONTEND_URL),
-  ...splitOrigins(process.env.FRONTEND_URL_2),
-  ...splitOrigins(process.env.ALLOWED_ORIGINS),
-  "http://localhost:3000",
-]);
+/** Browsers send Origin without a path; env URLs often include a trailing slash. */
+function normalizeOrigin(origin) {
+  if (!origin) return origin;
+  try {
+    const u = new URL(origin);
+    return `${u.protocol}//${u.host}`;
+  } catch {
+    return origin.replace(/\/+$/, "");
+  }
+}
 
-function isVercelPreviewOrigin(origin) {
-  if (process.env.ALLOW_VERCEL_PREVIEW_ORIGINS !== "true") return false;
+const allowedOrigins = new Set(
+  [
+    ...splitOrigins(process.env.FRONTEND_URL),
+    ...splitOrigins(process.env.FRONTEND_URL_2),
+    ...splitOrigins(process.env.ALLOWED_ORIGINS),
+    "http://localhost:3000",
+  ].map(normalizeOrigin),
+);
+
+function isVercelAppOrigin(origin) {
   try {
     const { protocol, hostname } = new URL(origin);
     return protocol === "https:" && hostname.endsWith(".vercel.app");
@@ -38,16 +50,28 @@ function isVercelPreviewOrigin(origin) {
   }
 }
 
+/** Default: allow https://*.vercel.app. Set ALLOW_VERCEL_PREVIEW_ORIGINS=false to require env-listed origins only. */
+function allowVercelWildcard() {
+  return process.env.ALLOW_VERCEL_PREVIEW_ORIGINS !== "false";
+}
+
 //middlewares
 
 server.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin || allowedOrigins.has(origin) || isVercelPreviewOrigin(origin)) {
+      if (!origin) {
         return callback(null, true);
       }
-
-      return callback(new Error("CORS not allowed"));
+      const normalized = normalizeOrigin(origin);
+      if (allowedOrigins.has(normalized)) {
+        return callback(null, true);
+      }
+      if (allowVercelWildcard() && isVercelAppOrigin(origin)) {
+        return callback(null, true);
+      }
+      // Do not pass Error — that triggers Express 500 with no CORS headers (browser shows a generic CORS failure).
+      return callback(null, false);
     },
     exposedHeaders: ["X-Total-Count"],
   }),
