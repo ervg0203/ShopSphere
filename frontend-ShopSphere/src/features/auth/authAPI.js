@@ -1,7 +1,8 @@
+import { API_URL } from "../../config";
 
 export function createUser(userData) {
   return new Promise(async (resolve) => {
-    const response = await fetch('http://localhost:8080/auth/signup', {
+    const response = await fetch(`${API_URL}/auth/signup`, {
       method: 'POST',
       body: JSON.stringify(userData),
       headers: { 'content-type': 'application/json' },
@@ -15,7 +16,7 @@ export function createUser(userData) {
 export function checkUser(loginInfo) {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await fetch('http://localhost:8080/auth/login', {
+      const response = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
         body: JSON.stringify(loginInfo),
         headers: { 'content-type': 'application/json' },

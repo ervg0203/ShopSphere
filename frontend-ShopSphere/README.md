@@ -40,13 +40,9 @@ Frontend for the ShopSphere ecommerce app, built with React, Redux Toolkit, Reac
 - `npm test` - run tests in watch mode
 - `npm run build` - create production build
 
-## Backend Dependency
+## Backend dependency
 
-This app expects the backend API to be running at:
-
-- `http://localhost:8080`
-
-Make sure the backend server is started before testing checkout, cart, auth, and order flows.
+The API base URL comes from `REACT_APP_API_URL` (see `.env` and `.env.production`). The default in code matches the deployed API at `https://shopsphere-lu1j.onrender.com`. For a local backend, set `REACT_APP_API_URL=http://localhost:8080` in `.env` and restart `npm start`.
 
 ## Screenshots / Images
 
