@@ -64,7 +64,6 @@ Or start in dev mode with auto-reload:
 
 The frontend app is configured to call this backend at `http://localhost:8080`.
 Run this backend first, then start the frontend.
-- Orders API sample response: `docs/images/orders-response.png`
 
 ## Notes
 
