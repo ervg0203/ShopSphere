@@ -44,21 +44,6 @@ Frontend for the ShopSphere ecommerce app, built with React, Redux Toolkit, Reac
 
 The API base URL comes from `REACT_APP_API_URL` (see `.env` and `.env.production`). The default in code matches the deployed API at `https://shopsphere-lu1j.onrender.com`. For a local backend, set `REACT_APP_API_URL=http://localhost:8080` in `.env` and restart `npm start`.
 
-## Screenshots / Images
-
-Add your UI screenshots here later.
-
-Suggested image folder:
-
-- `frontend-ShopSphere/docs/images/`
-
-Example placeholders:
-
-- Home page: `docs/images/home.png`
-- Product detail page: `docs/images/product-detail.png`
-- Checkout page: `docs/images/checkout.png`
-- Payment gateway page: `docs/images/payment-gateway.png`
-
 ## Notes
 
 - Keep frontend and backend running together for full functionality.
