@@ -64,19 +64,6 @@ Or start in dev mode with auto-reload:
 
 The frontend app is configured to call this backend at `http://localhost:8080`.
 Run this backend first, then start the frontend.
-
-## Screenshots / Images
-
-Add backend-related screenshots here later.
-
-Suggested image folder:
-
-- `backend-ShopSphere/docs/images/`
-
-Example placeholders:
-
-- API health check response: `docs/images/health-check.png`
-- MongoDB connection success log: `docs/images/db-connected.png`
 - Orders API sample response: `docs/images/orders-response.png`
 
 ## Notes
